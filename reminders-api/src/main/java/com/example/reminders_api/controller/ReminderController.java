@@ -51,7 +51,7 @@ public class ReminderController {
         var reminder =new  Reminder();
         reminder.setRemindMe(request.remindMe());
         reminder.setText(request.text());
-        reminder.setStatus(request.status());
+        reminder.setStatus(Status.PENDING);
         reminder.setRemindOn(request.remindOn());
         reminder.setUserName(username);
 
@@ -60,12 +60,28 @@ public class ReminderController {
                 .body(new ReminderResponse(HttpStatus.CREATED, reminder));
     }
 
-    @PutMapping({"id"})
+    @PutMapping("/{id}")
     public ResponseEntity<ReminderResponse> updateReminder(@PathVariable Long id ) {
         Optional<Reminder> reminder = service.findById(id);
         if(reminder.isPresent()){
             reminder.get().setStatus(Status.COMPLETE);
             service.save(reminder.get());
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(new ReminderResponse(HttpStatus.ACCEPTED, reminder));
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ReminderResponse(HttpStatus.INTERNAL_SERVER_ERROR, reminder));
+    }
+
+
+    @PutMapping("/{id}")
+
+    public ResponseEntity<ReminderResponse> deleteReminder(@PathVariable Long id ) {
+        Optional<Reminder> reminder = service.findById(id);
+        if(reminder.isPresent()){
+
+            service.deleteById(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(new ReminderResponse(HttpStatus.ACCEPTED, reminder));
         }

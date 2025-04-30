@@ -35,4 +35,9 @@ public class ReminderServiceImpl implements ReminderService {
     public Optional<Reminder> findById(Long id) {
         return repository.findById(id);
     }
+
+    @Override
+    public void deleteById(Long Id) {
+        repository.deleteById(Id);
+    }
 }

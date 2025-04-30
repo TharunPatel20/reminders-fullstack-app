@@ -9,8 +9,15 @@ export default function Remainders() {
   const [remaind, setRemaind] = useState(false);
 
   useEffect(() => {
+ 
+  const username = localStorage.getItem("username");
+  console.log(username);
     axios
-      .get("http://localhost:9000/api/reminders/u?userName=Tharun")
+      .get(`http://localhost:9000/api/reminders/u?userName=${username}`, {
+        headers: {
+          username:username ,
+        },
+      })
       .then((response) => {
         console.log(response);
         setData(response.data.payload || response.data);
@@ -25,18 +32,23 @@ export default function Remainders() {
         Reminders
       </h1>
       <div className="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-md">
-        {remaind  ? (
-          <RemainderForm setRemaind={setRemaind}/>
+        {remaind ? (
+          <RemainderForm setRemaind={setRemaind} />
         ) : (
-          <button 
-          className="w-full bg-blue-600 text-white p-2 rounded-md mt-4 hover:bg-blue-700"
-          onClick={() => setRemaind(!remaind)}>
-            Add Remainder</button>
+          <button
+            className="w-full bg-blue-600 text-white p-2 rounded-md mt-4 hover:bg-blue-700"
+            onClick={() => setRemaind(!remaind)}
+          >
+            Add Reminder
+          </button>
         )}
         <div>
-          <button 
-          className="w-full bg-blue-600 text-white p-2 rounded-md mt-4 hover:bg-blue-700"
-          onClick={() => setLoad(!load)}>load my remainds</button>
+          <button
+            className="w-full bg-blue-600 text-white p-2 rounded-md mt-4 hover:bg-blue-700"
+            onClick={() => setLoad(!load)}
+          >
+            load my reminds
+          </button>
         </div>
         <Remainder data={data} />
       </div>

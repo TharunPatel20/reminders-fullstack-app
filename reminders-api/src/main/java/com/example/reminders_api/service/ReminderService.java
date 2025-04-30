@@ -15,4 +15,6 @@ public interface ReminderService {
     List<Reminder> findAllByStatus(Status status);
 
     Optional<Reminder> findById(Long id);
+
+    void deleteById(Long Id);
 }

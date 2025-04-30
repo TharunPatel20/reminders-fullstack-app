@@ -9,8 +9,7 @@ export default function RemainderForm({ setRemaind }) {
   const initialValues = {
     text: "",
     remindOn: "",
-    remindMe: false,
-    status:"PENDING"
+    remindMe: false
   };
 
   const validationSchema = Yup.object({
@@ -20,11 +19,13 @@ export default function RemainderForm({ setRemaind }) {
   });
 
   useEffect(() => {
+
+    const username = localStorage.getItem("username");
     if (postData) {
       axios
         .post("http://localhost:9000/api/reminders", postData, {
           headers: {
-            username: "Tharun",
+            username: username,
           },
         })
         .then((response) => {
@@ -49,7 +50,7 @@ export default function RemainderForm({ setRemaind }) {
           resetForm();
         }}
       >
-        {({ values }) => (
+        {() => (
           <Form className="space-y-4">
             <div>
               <label htmlFor="text" className="block text-gray-700 font-medium">
@@ -92,9 +93,6 @@ export default function RemainderForm({ setRemaind }) {
               <label htmlFor="remindMe" className="text-gray-700 font-medium">
                 Remind Me
               </label>
-              <span className="ml-3 text-sm text-gray-500">
-                {values.remindMe ?  "PENDING":"COMPLETE" }
-              </span>
             </div>
 
             <button

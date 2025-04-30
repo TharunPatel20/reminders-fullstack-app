@@ -9,6 +9,5 @@ import java.time.LocalDate;
 public record ReminderRequestDto(
         @NotBlank(message = "Reminder text cannot be blank") String text,
         @NotNull(message = "Reminder date is mandatory") LocalDate remindOn,
-        boolean remindMe,
-        Status status) {
+        boolean remindMe) {
 }
