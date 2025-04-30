@@ -1,5 +1,9 @@
+import Remainders from "./Remainders"
+
 function App() {
-	return <></>
+	return <>
+	<Remainders/>
+	</>
 }
 
 export default App

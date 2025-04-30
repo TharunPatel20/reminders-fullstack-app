@@ -4,6 +4,7 @@ import com.example.reminders_api.model.Reminder;
 import com.example.reminders_api.model.Status;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReminderService {
 
@@ -12,4 +13,6 @@ public interface ReminderService {
     Reminder save(Reminder reminder);
 
     List<Reminder> findAllByStatus(Status status);
+
+    Optional<Reminder> findById(Long id);
 }

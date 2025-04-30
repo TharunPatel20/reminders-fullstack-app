@@ -5,19 +5,21 @@ import com.example.reminders_api.model.Reminder;
 import com.example.reminders_api.model.Status;
 import com.example.reminders_api.service.ReminderService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/reminders")
-@RequiredArgsConstructor
+@CrossOrigin("http://localhost:5173")
+//@RequiredArgsConstructor
 public class ReminderController {
-
-    private final ReminderService service;
+@Autowired
+    private  ReminderService service;
 
     // GET /api/reminders?userName=
     @GetMapping("/u")
@@ -32,7 +34,7 @@ public class ReminderController {
     }
 
     // GET /api/reminders?status=....
-    @GetMapping("/s")
+    @GetMapping("/s/")
     public ResponseEntity<ReminderResponse> getAllRemindersByUser(@RequestParam Status status) {
         var reminders = service.findAllByStatus(status);
         if (reminders.isEmpty()) {
@@ -45,14 +47,31 @@ public class ReminderController {
 
 
     @PostMapping
-    public ResponseEntity<ReminderResponse> createReminder(@Valid @RequestBody ReminderRequestDto request) {
-        var reminder = Reminder.builder()
-                .text(request.text()).remindOn(request.remindOn())
-                .remindMe(request.remindMe()).status(Status.PENDING).userName("ashish")
-                .build();
+    public ResponseEntity<ReminderResponse> createReminder(@Valid @RequestBody ReminderRequestDto request,@RequestHeader String username) {
+        var reminder =new  Reminder();
+        reminder.setRemindMe(request.remindMe());
+        reminder.setText(request.text());
+        reminder.setStatus(request.status());
+        reminder.setRemindOn(request.remindOn());
+        reminder.setUserName(username);
+
         reminder = service.save(reminder);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ReminderResponse(HttpStatus.CREATED, reminder));
+    }
+
+    @PutMapping({"id"})
+    public ResponseEntity<ReminderResponse> updateReminder(@PathVariable Long id ) {
+        Optional<Reminder> reminder = service.findById(id);
+        if(reminder.isPresent()){
+            reminder.get().setStatus(Status.COMPLETE);
+            service.save(reminder.get());
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(new ReminderResponse(HttpStatus.ACCEPTED, reminder));
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ReminderResponse(HttpStatus.INTERNAL_SERVER_ERROR, reminder));
     }
 
 }

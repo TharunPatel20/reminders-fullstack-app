@@ -3,16 +3,18 @@ package com.example.reminders_api.service;
 import com.example.reminders_api.model.Reminder;
 import com.example.reminders_api.model.Status;
 import com.example.reminders_api.repository.ReminderRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class ReminderServiceImpl implements ReminderService {
 
-    private final ReminderRepository repository;
+    @Autowired
+    private  ReminderRepository repository;
 
     @Override
     public List<Reminder> findAllByUserName(String userName) {
@@ -27,5 +29,10 @@ public class ReminderServiceImpl implements ReminderService {
     @Override
     public List<Reminder> findAllByStatus(Status status) {
         return repository.findAllByStatus(status);
+    }
+
+    @Override
+    public Optional<Reminder> findById(Long id) {
+        return repository.findById(id);
     }
 }
